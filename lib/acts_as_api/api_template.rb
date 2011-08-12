@@ -112,7 +112,7 @@ module ActsAsApi
           case value
           when Symbol
             if model.respond_to?(value)
-              out = model.send value
+              out = model.instance_eval value.to_s
             end
 
           when Proc
@@ -120,10 +120,7 @@ module ActsAsApi
 
           when String
             # go up the call chain
-            out = model
-            value.split(".").each do |method|
-              out = out.send(method.to_sym)
-            end
+            out = model.instance_eval value
 
           when Hash
             leaf[:output][field] ||= {}
